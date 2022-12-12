@@ -1,11 +1,22 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'AppCenter Build'
+description: 'Set and run build on AppCenter'
+author: 'Nicolas Cavallin'
 inputs:
-  milliseconds: # change this
+  appcenter_token:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'AppCenter token to call the API'
+  appcenter_user:
+    required: true
+    description: 'AppCenter user or organization name'
+  appcenter_app:
+    required: true
+    description: 'AppCenter app name'
+  branch_name:
+    required: true
+    description: 'GitHub branch name to be used as a source for the build'
+  settings_branch_name:
+    required: true
+    description: 'GitHub branch name to be used as a source on AppCenter for the build settings'
 runs:
   using: 'node16'
   main: 'dist/index.js'
