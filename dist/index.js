@@ -149,6 +149,7 @@ function run() {
                 return core.setFailed(`❌ Error starting build. ${start_build}`);
             }
             core.info(`✅ Build started successfully with id: ${start_build.data.id}.`);
+            // As output you'll get the build id, so you can use it in the next steps to call the AppCenter API.
             return core.setOutput('build_id', start_build.data.id);
         }
         catch (error) {

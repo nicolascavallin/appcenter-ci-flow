@@ -159,6 +159,8 @@ async function run(): Promise<void> {
 
     core.info(`✅ Build started successfully with id: ${start_build.data.id}.`)
 
+    // As output you'll get the build id, so you can use it in the next steps to call the AppCenter API.
+
     return core.setOutput('build_id', start_build.data.id)
   } catch (error) {
     if (error instanceof Error)
