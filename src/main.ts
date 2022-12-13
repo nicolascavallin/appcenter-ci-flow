@@ -10,10 +10,8 @@ async function run(): Promise<void> {
     const branch_name = core.getInput('branch_name')
     const settings_branch_name = core.getInput('settings_branch_name')
 
-    core.debug(`Starting CI process for branch: ${branch_name}...`)
-
-    core.debug('')
-    core.debug('🔄 Step 1: Check if there is a build in progress')
+    core.info('')
+    core.info('🔄 Step 1: Check if there is a build in progress')
 
     const current_status = await axios(
       `https://api.appcenter.ms/v0.1/apps/${appcenter_user}/${appcenter_app}/branches/${branch_name}/builds`,
@@ -61,13 +59,13 @@ async function run(): Promise<void> {
         )
       }
 
-      core.debug('✅ Current build stopped.')
+      core.info('✅ Current build stopped.')
     } else {
-      core.debug('✅ No build in progress.')
+      core.info('✅ No build in progress.')
     }
 
-    core.debug('')
-    core.debug('🔄 Step 2: Set build configuration')
+    core.info('')
+    core.info('🔄 Step 2: Set build configuration')
 
     const current_settings = await axios(
       `https://api.appcenter.ms/v0.1/apps/${appcenter_user}/${appcenter_app}/branches/${branch_name}/config`,
@@ -77,7 +75,11 @@ async function run(): Promise<void> {
           accept: 'application/json',
           'X-API-Token': appcenter_token
         },
-        // This is to avoid crash on 404, because it an expected value.
+        /**
+         * This is to avoid crash on 404, because it an expected value.
+         *  200: means that the branch has a configuration.
+         *  404: means that the branch doesn't have a configuration.
+         */
         validateStatus: () => true
       }
     )
@@ -107,7 +109,7 @@ async function run(): Promise<void> {
         )
       }
 
-      core.debug('✅ Clean previous build configuration.')
+      core.info('✅ Clean previous build configuration.')
     }
 
     const set_branch = await axios(
@@ -131,10 +133,10 @@ async function run(): Promise<void> {
       )
     }
 
-    core.debug('✅ Build configuration set.')
+    core.info('✅ Build configuration set.')
 
-    core.debug('')
-    core.debug('🔄 Step 3: Start build')
+    core.info('')
+    core.info('🔄 Step 3: Start build')
 
     const start_build = await axios(
       `https://api.appcenter.ms/v0.1/apps/${appcenter_user}/${appcenter_app}/branches/${branch_name}/builds`,
@@ -155,11 +157,12 @@ async function run(): Promise<void> {
       return core.setFailed(`❌ Error starting build. ${start_build}`)
     }
 
-    core.debug(`✅ Build started successfully with id: ${start_build.data.id}.`)
+    core.info(`✅ Build started successfully with id: ${start_build.data.id}.`)
 
     return core.setOutput('build_id', start_build.data.id)
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error)
+      return core.setFailed(`❌ The flow has failed. ${error.message}`)
   }
 }
 

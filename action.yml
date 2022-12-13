@@ -1,6 +1,5 @@
-name: 'AppCenter Build'
+name: 'appcenter-build'
 description: 'Set and run build on AppCenter'
-author: 'Nicolas Cavallin'
 inputs:
   appcenter_token:
     required: true
