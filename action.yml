@@ -1,4 +1,4 @@
-name: 'appcenter-build'
+name: 'appcenter-build-flow-with-clone-settings'
 description: 'Set and run build on AppCenter'
 inputs:
   appcenter_token:
